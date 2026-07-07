@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervision · Mini-portail IT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-eyebrow">MINI-PORTAIL</span>
+      <h1>Supervision<span class="dot">.</span></h1>
+    </div>
+    <div class="topbar-meta">
+      <div class="meta-block">
+        <span class="meta-label">Services actifs</span>
+        <span class="meta-value" id="count-total">0</span>
+      </div>
+      <div class="meta-block">
+        <span class="meta-label">En ligne</span>
+        <span class="meta-value up" id="count-up">0</span>
+      </div>
+      <div class="meta-block">
+        <span class="meta-label">Hors ligne</span>
+        <span class="meta-value down" id="count-down">0</span>
+      </div>
+      <div class="meta-block clock-block">
+        <span class="meta-label">UTC</span>
+        <span class="meta-value clock" id="clock">--:--:--</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <form id="add-form" class="add-bar">
+      <span class="prompt-glyph">&gt;</span>
+      <input type="text" id="name" placeholder="nom du service" required autocomplete="off">
+      <input type="url" id="url" placeholder="https://exemple.com/health" required autocomplete="off">
+      <button type="submit">Ajouter</button>
+    </form>
+
+    <div id="empty-state" class="empty-state" hidden>
+      <p>Aucun service surveillé pour l'instant.</p>
+      <p class="empty-sub">Ajoute une URL ci-dessus pour commencer le monitoring.</p>
+    </div>
+
+    <div id="services-grid" class="services-grid"></div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
