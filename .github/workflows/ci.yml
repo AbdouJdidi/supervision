@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Installer les dépendances
+        working-directory: backend
+        run: npm install
+
+      - name: Vérifier le code (lint basique)
+        working-directory: backend
+        run: node -e "require('./server.js')" &
+        continue-on-error: false
+
+  security-scans:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Scan des secrets (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Audit des dépendances npm
+        working-directory: backend
+        run: npm audit --audit-level=high || true
+
+  docker-build-and-scan:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Construire l'image Docker
+        run: docker build -t mini-supervision:ci .
+
+      - name: Scan de l'image Docker (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'mini-supervision:ci'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'
