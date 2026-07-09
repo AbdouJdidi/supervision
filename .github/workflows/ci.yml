@@ -22,10 +22,19 @@ jobs:
         working-directory: backend
         run: npm install
 
-      - name: Vérifier le code (lint basique)
+      - name: Vérifier le code (pas d'erreur de chargement)
         working-directory: backend
         run: node -e "require('./server.js')" &
         continue-on-error: false
+
+      - name: Lancer un test simple (vérification de l'API)
+        working-directory: backend
+        run: |
+          node server.js &
+          SERVER_PID=$!
+          sleep 3
+          curl --fail http://localhost:3000/api/services
+          kill $SERVER_PID
 
   security-scans:
     runs-on: ubuntu-latest
