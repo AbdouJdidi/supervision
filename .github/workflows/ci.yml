@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Installer Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
 
@@ -32,7 +32,7 @@ jobs:
     needs: build-and-test
     steps:
       - name: Checkout du code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Scan des secrets (Gitleaks)
         uses: gitleaks/gitleaks-action@v2
@@ -48,7 +48,7 @@ jobs:
     needs: build-and-test
     steps:
       - name: Checkout du code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Construire l'image Docker
         run: docker build -t mini-supervision:ci .
